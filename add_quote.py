@@ -8,18 +8,11 @@ fontsize = 60
 fontweight = 900
 color = "BLACK"
 outline_color = "WHITE"
-outline_width = 4  # You can adjust this value based on how thick you want the outline to be
+outline_width = 10  # You can adjust this value based on how thick you want the outline to be
 
-
-
-def draw_roi(contxt, roi_width, roi_height):
-    """Let's draw a blue box so we can identify what
-    our region of interest is."""
-    ctx.push()
-    ctx.stroke_color = Color('YELLOW')
-    ctx.fill_color = Color('TRANSPARENT')
-    ctx.rectangle(left=50, top=50, width=roi_width, height=roi_height)
-    ctx.pop()
+# horizontal text alignment
+centered_text = False
+bottom_text = True
 
 
 def word_wrap(image, ctx, text, roi_width, roi_height):
@@ -56,11 +49,9 @@ def word_wrap(image, ctx, text, roi_width, roi_height):
         raise RuntimeError("Unable to calculate word_wrap for " + text)
     return mutable_message
 
-message = """Philosophy does not promise to secure anything external for cat, otherwise it would be admitting something that lies beyond its proper subject-matter. For as the material of the carpenter is wood, and that of statuary bronze, so the subject-matter of the art of living is each cat's own life.
-— Epiccatus"""
-with Image(filename='2.png') as img:
+message = "Claws sharp, eyes keen. In chaos, find calm. Stand alone, remain strong. This is street wisdom"
+with Image(filename='img/6.webp') as img:
     with Drawing() as ctx:
-        draw_roi(ctx, img.width - 10, img.height - 10)  # Visualize the text area
         ctx.fill_color = Color(color)
         ctx.font_family = typeface
         ctx.font_weight = fontweight
@@ -75,8 +66,11 @@ with Image(filename='2.png') as img:
         text_height = metrics.text_height
         
         x = (img.width - text_width) / 2
-        y = (img.height - text_height) / 2 + metrics.ascender
-        
+        if centered_text:
+            y = (img.height - text_height) / 2 + metrics.ascender
+        if bottom_text:
+            y = img.height - text_height - 50
+
         # outline text
         ctx.text(round(x), round(y), mutable_message)
         # actual text
