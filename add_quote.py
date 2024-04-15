@@ -49,6 +49,7 @@ def word_wrap(image, ctx, text, roi_width, roi_height):
         raise RuntimeError("Unable to calculate word_wrap for " + text)
     return mutable_message
 
+
 message = "Claws sharp, eyes keen. In chaos, find calm. Stand alone, remain strong. This is street wisdom"
 with Image(filename='img/6.webp') as img:
     with Drawing() as ctx:

@@ -38,4 +38,4 @@ def imagegen(input="Street wildlife: oppossum, raccoon, skunk, squirrel. The ani
     save_image_from_url(url, filename)
 
 if __name__ == "__main__":
-    imagegen("horse")
+    imagegen()
