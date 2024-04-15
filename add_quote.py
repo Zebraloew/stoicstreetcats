@@ -1,0 +1,80 @@
+from textwrap import wrap
+from wand.color import Color
+from wand.drawing import Drawing
+from wand.image import Image
+
+typeface = "Helvetica"
+fontsize = 60
+color = "BLACK"
+outline_color = "WHITE"
+outline_width = 2  # You can adjust this value based on how thick you want the outline to be
+
+
+
+def draw_roi(contxt, roi_width, roi_height):
+    """Let's draw a blue box so we can identify what
+    our region of interest is."""
+    ctx.push()
+    ctx.stroke_color = Color('YELLOW')
+    ctx.fill_color = Color('TRANSPARENT')
+    ctx.rectangle(left=50, top=50, width=roi_width, height=roi_height)
+    ctx.pop()
+
+
+def word_wrap(image, ctx, text, roi_width, roi_height):
+    """Break long text to multiple lines, and reduce point size
+    until all text fits within a bounding box."""
+    mutable_message = text
+    iteration_attempts = 100
+
+    def eval_metrics(txt):
+        """Quick helper function to calculate width/height of text."""
+        metrics = ctx.get_font_metrics(image, txt, True)
+        return (metrics.text_width, metrics.text_height)
+
+    while ctx.font_size > 0 and iteration_attempts:
+        iteration_attempts -= 1
+        width, height = eval_metrics(mutable_message)
+        if height > roi_height:
+            ctx.font_size -= 0.75  # Reduce pointsize
+            mutable_message = text  # Restore original text
+        elif width > roi_width:
+            columns = len(mutable_message)
+            while columns > 0:
+                columns -= 1
+                mutable_message = '\n'.join(wrap(mutable_message, columns))
+                wrapped_width, _ = eval_metrics(mutable_message)
+                if wrapped_width <= roi_width:
+                    break
+            if columns < 1:
+                ctx.font_size -= 0.75  # Reduce pointsize
+                mutable_message = text  # Restore original text
+        else:
+            break
+    if iteration_attempts < 1:
+        raise RuntimeError("Unable to calculate word_wrap for " + text)
+    return mutable_message
+
+message = """Philosophy does not promise to secure anything external for man, otherwise it would be admitting something that lies beyond its proper subject-matter. For as the material of the carpenter is wood, and that of statuary bronze, so the subject-matter of the art of living is each person's own life.
+— Epictetus"""
+with Image(filename='2.png') as img:
+    with Drawing() as ctx:
+        draw_roi(ctx, img.width - 10, img.height - 10)  # Visualize the text area
+        ctx.fill_color = Color(color)
+        ctx.font_family = typeface
+        ctx.font_size = fontsize
+        ctx.stroke_color = Color(outline_color)
+        ctx.stroke_width = outline_width
+        
+        mutable_message = word_wrap(img, ctx, message, img.width - 10, img.height - 10)
+        
+        metrics = ctx.get_font_metrics(img, mutable_message, multiline=True)
+        text_width = metrics.text_width
+        text_height = metrics.text_height
+        
+        x = (img.width - text_width) / 2
+        y = (img.height - text_height) / 2 + metrics.ascender
+        
+        ctx.text(round(x), round(y), mutable_message)
+        ctx.draw(img)
+        img.save(filename='centered-text.png')
