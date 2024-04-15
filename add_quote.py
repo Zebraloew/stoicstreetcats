@@ -3,11 +3,12 @@ from wand.color import Color
 from wand.drawing import Drawing
 from wand.image import Image
 
-typeface = "Helvetica"
+typeface = "JetBrainsMono Nerd Font Propo"
 fontsize = 60
+fontweight = 900
 color = "BLACK"
 outline_color = "WHITE"
-outline_width = 2  # You can adjust this value based on how thick you want the outline to be
+outline_width = 4  # You can adjust this value based on how thick you want the outline to be
 
 
 
@@ -55,13 +56,14 @@ def word_wrap(image, ctx, text, roi_width, roi_height):
         raise RuntimeError("Unable to calculate word_wrap for " + text)
     return mutable_message
 
-message = """Philosophy does not promise to secure anything external for man, otherwise it would be admitting something that lies beyond its proper subject-matter. For as the material of the carpenter is wood, and that of statuary bronze, so the subject-matter of the art of living is each person's own life.
-— Epictetus"""
+message = """Philosophy does not promise to secure anything external for cat, otherwise it would be admitting something that lies beyond its proper subject-matter. For as the material of the carpenter is wood, and that of statuary bronze, so the subject-matter of the art of living is each cat's own life.
+— Epiccatus"""
 with Image(filename='2.png') as img:
     with Drawing() as ctx:
         draw_roi(ctx, img.width - 10, img.height - 10)  # Visualize the text area
         ctx.fill_color = Color(color)
         ctx.font_family = typeface
+        ctx.font_weight = fontweight
         ctx.font_size = fontsize
         ctx.stroke_color = Color(outline_color)
         ctx.stroke_width = outline_width
@@ -75,6 +77,11 @@ with Image(filename='2.png') as img:
         x = (img.width - text_width) / 2
         y = (img.height - text_height) / 2 + metrics.ascender
         
+        # outline text
         ctx.text(round(x), round(y), mutable_message)
+        # actual text
+        ctx.stroke_width = 0
+        ctx.text(round(x), round(y), mutable_message)
+
         ctx.draw(img)
         img.save(filename='centered-text.png')
