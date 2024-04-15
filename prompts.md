@@ -1,0 +1,1 @@
+oppossum seneca, squirrel aurelius, raccoon epictetus. seneca, aurelius, epictetus. style of lachapelle --ar 1:1 --s 750 --v 6.0 
