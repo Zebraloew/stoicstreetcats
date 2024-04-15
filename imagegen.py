@@ -1,4 +1,5 @@
 from openai import OpenAI
+from random10 import generate_random_sequence as random10
 import requests #safe from web to file
 
 def imagegen(input="Street wildlife: oppossum, raccoon, skunk, squirrel. The animals are depicted engaging in various stoic activities in a quirky, philosophical urban rooftop setting. Roaming the alleys and perched on rooftops, our streetwise cats offer a purr-spective on life through the stoic lens. Discover urban tales and philosophical mewsings from the wisest whiskers in the city. "):
@@ -32,9 +33,9 @@ def imagegen(input="Street wildlife: oppossum, raccoon, skunk, squirrel. The ani
 
     # Example usage
     url = image_url # Replace this with the actual URL of the image
-    filename = "downloaded_image.png"  # Specify the filename to save as
+    filename = "downloaded_image____"+random10()+".png"  # Specify the filename to save as
 
     save_image_from_url(url, filename)
 
 if __name__ == "__main__":
-    imagegen()
+    imagegen("horse")
