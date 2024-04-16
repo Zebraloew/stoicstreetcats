@@ -48,7 +48,10 @@ def add_quote(image="img/6.webp", quote=message):
             ctx.text(round(x), round(y), mutable_message)
 
             ctx.draw(img)
-            img.save(filename="centered-text_" + random10()+ ".png")
+            filename_buffer = "centered-text_" + random10()+ ".png"
+            img.save(filename = filename_buffer)
+            return filename_buffer
         
 if __name__ == "__main__":
-    add_quote("img/4.webp","Yo, Cheers!")
+    filename = add_quote("img/4.webp","Yo, Cheers!")
+    print(filename)

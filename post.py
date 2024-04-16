@@ -25,6 +25,7 @@ def move_posted_photo(source_path):
 
 
 def post(photo_path = "img/2.png", caption = ""):
+    logbook = "Posting \n"
     print("Logging in")
     try:
         client = authenticate()
@@ -46,8 +47,10 @@ def post(photo_path = "img/2.png", caption = ""):
         print(f"Moved {photo_path} to posted")
     except Exception as e:
         print(f"Failed moving\n",str(e))
+    
+    return logbook
 
 if __name__ == "__main__":
-    post()
+    post("centered-text_LP4lnBVZPu.png")
         
 

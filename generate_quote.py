@@ -21,10 +21,11 @@ def generate_quote(prompt = "stoic quote thing but from streetcats' perspective.
         # Print each part of the response
         if response.choices:
             for choice in response.choices:
-                print(choice.message.content)
+                return choice.message.content
 
     except Exception as e:
         print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
-    generate_quote()
+    quote = generate_quote()
+    print(quote)
