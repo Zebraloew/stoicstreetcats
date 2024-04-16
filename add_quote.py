@@ -4,45 +4,51 @@ from wand.drawing import Drawing
 from wand.image import Image
 from random10 import generate_random_sequence as random10
 
-typeface = "JetBrainsMono Nerd Font Propo"
-fontsize = 60
-fontweight = 900
-color = "BLACK"
-outline_color = "WHITE"
-outline_width = 10  # You can adjust this value based on how thick you want the outline to be
+message = "Claws sharp, eyes keen. In chaos, find calm. Stand alone, remain strong. This is street wisdom"
 
-# horizontal text alignment
-centered_text = False
-bottom_text = True
+def add_quote(image="img/6.webp", quote=message):
+
+    typeface = "JetBrainsMono Nerd Font Propo"
+    fontsize = 60
+    fontweight = 900
+    color = "BLACK"
+    outline_color = "WHITE"
+    outline_width = 10  # You can adjust this value based on how thick you want the outline to be
+
+    # horizontal text alignment
+    centered_text = False
+    bottom_text = True
 
 
-message = "Caws sharp, eyes keen. In chaos, find calm. Stand alone, remain strong. This is street wisdom"
-with Image(filename='img/6.webp') as img:
-    with Drawing() as ctx:
-        ctx.fill_color   = Color(color)
-        ctx.font_family  = typeface
-        ctx.font_weight  = fontweight
-        ctx.font_size    = fontsize
-        ctx.stroke_color = Color(outline_color)
-        ctx.stroke_width = outline_width
+    with Image(filename=image) as img:
+        with Drawing() as ctx:
+            ctx.fill_color   = Color(color)
+            ctx.font_family  = typeface
+            ctx.font_weight  = fontweight
+            ctx.font_size    = fontsize
+            ctx.stroke_color = Color(outline_color)
+            ctx.stroke_width = outline_width
+            
+            mutable_message = word_wrap(img, ctx, quote, img.width - 10, img.height - 10)
+            
+            metrics = ctx.get_font_metrics(img, mutable_message, multiline=True)
+            text_width = metrics.text_width
+            text_height = metrics.text_height
+            
+            x = (img.width - text_width) / 2
+            if centered_text:
+                y = (img.height - text_height) / 2 + metrics.ascender
+            if bottom_text:
+                y = img.height - text_height - 50
+
+            # outline text
+            ctx.text(round(x), round(y), mutable_message)
+            # actual text
+            ctx.stroke_width = 0
+            ctx.text(round(x), round(y), mutable_message)
+
+            ctx.draw(img)
+            img.save(filename="centered-text_" + random10()+ ".png")
         
-        mutable_message = word_wrap(img, ctx, message, img.width - 10, img.height - 10)
-        
-        metrics = ctx.get_font_metrics(img, mutable_message, multiline=True)
-        text_width = metrics.text_width
-        text_height = metrics.text_height
-        
-        x = (img.width - text_width) / 2
-        if centered_text:
-            y = (img.height - text_height) / 2 + metrics.ascender
-        if bottom_text:
-            y = img.height - text_height - 50
-
-        # outline text
-        ctx.text(round(x), round(y), mutable_message)
-        # actual text
-        ctx.stroke_width = 0
-        ctx.text(round(x), round(y), mutable_message)
-
-        ctx.draw(img)
-        img.save(filename="centered-text_" + random10()+ ".png")
+if __name__ == "__main__":
+    add_quote("img/4.webp","Yo, Cheers!")
