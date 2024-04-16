@@ -1,7 +1,8 @@
-from textwrap import wrap
+from word_wrap import word_wrap
 from wand.color import Color
 from wand.drawing import Drawing
 from wand.image import Image
+from random10 import generate_random_sequence as random10
 
 typeface = "JetBrainsMono Nerd Font Propo"
 fontsize = 60
@@ -15,48 +16,13 @@ centered_text = False
 bottom_text = True
 
 
-def word_wrap(image, ctx, text, roi_width, roi_height):
-    """Break long text to multiple lines, and reduce point size
-    until all text fits within a bounding box."""
-    mutable_message = text
-    iteration_attempts = 100
-
-    def eval_metrics(txt):
-        """Quick helper function to calculate width/height of text."""
-        metrics = ctx.get_font_metrics(image, txt, True)
-        return (metrics.text_width, metrics.text_height)
-
-    while ctx.font_size > 0 and iteration_attempts:
-        iteration_attempts -= 1
-        width, height = eval_metrics(mutable_message)
-        if height > roi_height:
-            ctx.font_size -= 0.75  # Reduce pointsize
-            mutable_message = text  # Restore original text
-        elif width > roi_width:
-            columns = len(mutable_message)
-            while columns > 0:
-                columns -= 1
-                mutable_message = '\n'.join(wrap(mutable_message, columns))
-                wrapped_width, _ = eval_metrics(mutable_message)
-                if wrapped_width <= roi_width:
-                    break
-            if columns < 1:
-                ctx.font_size -= 0.75  # Reduce pointsize
-                mutable_message = text  # Restore original text
-        else:
-            break
-    if iteration_attempts < 1:
-        raise RuntimeError("Unable to calculate word_wrap for " + text)
-    return mutable_message
-
-
-message = "Claws sharp, eyes keen. In chaos, find calm. Stand alone, remain strong. This is street wisdom"
+message = "Caws sharp, eyes keen. In chaos, find calm. Stand alone, remain strong. This is street wisdom"
 with Image(filename='img/6.webp') as img:
     with Drawing() as ctx:
-        ctx.fill_color = Color(color)
-        ctx.font_family = typeface
-        ctx.font_weight = fontweight
-        ctx.font_size = fontsize
+        ctx.fill_color   = Color(color)
+        ctx.font_family  = typeface
+        ctx.font_weight  = fontweight
+        ctx.font_size    = fontsize
         ctx.stroke_color = Color(outline_color)
         ctx.stroke_width = outline_width
         
@@ -79,4 +45,4 @@ with Image(filename='img/6.webp') as img:
         ctx.text(round(x), round(y), mutable_message)
 
         ctx.draw(img)
-        img.save(filename='centered-text.png')
+        img.save(filename="centered-text_" + random10()+ ".png")
