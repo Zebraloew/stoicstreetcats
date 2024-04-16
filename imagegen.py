@@ -31,11 +31,12 @@ def imagegen(input="Street wildlife: oppossum, raccoon, skunk, squirrel. The ani
         else:
             print(f"Failed to download the image. Status code: {response.status_code}")
 
-    # Example usage
-    url = image_url # Replace this with the actual URL of the image
-    filename = "downloaded_image____"+random10()+".png"  # Specify the filename to save as
 
+    url = image_url 
+    filename = "downloaded_image____"+random10()+".png"
     save_image_from_url(url, filename)
+    return filename
 
 if __name__ == "__main__":
-    imagegen()
+    print(imagegen("catsnest"))
+    
